@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+use App\Models\Employee;
 
 class Company extends Model
 {
-    use HasFactory;
-
     /** @var int $primaryKey */
     protected $primaryKey = 'id_company';
 
@@ -36,7 +35,7 @@ class Company extends Model
     public static function checkExistByNip(string $nip): bool
     {
         // try to find company by nip
-        $company = Company::where('nip', $nip)->first();
+        $company = static::where('nip', $nip)->first();
 
         if (!empty($company)) {
             return true;
@@ -48,9 +47,9 @@ class Company extends Model
     /**
      * Validate length of nip filed
      * 
-     * @param string|null $nip
+     * @param string $nip
      */
-    public static function validateNip(?string $nip): bool
+    public static function validateNip(string $nip): bool
     {
         $length = 10;
 
@@ -59,5 +58,14 @@ class Company extends Model
         }
 
         return true;
+    }
+
+    /**
+     * Get employees
+     */
+    public function getEmployees()
+    {
+        return static::where('id_company', $this->id_company)
+            ->get();
     }
 }

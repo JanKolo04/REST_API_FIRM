@@ -8,24 +8,17 @@ use App\Models\Company;
 
 class CompanyController extends Controller
 {
+    const FILEDS = ['name', 'nip', 'address', 'city', 'post_code'];
+
     /**
      * Create company
+     * 
      * @param Request $request
      */
     public function create(Request $request)
     {
-        // validate exist of company by nip
-        if (Company::checkExistByNip($request->nip)) {
-            return response()->json([
-                'error' => [
-                    'message' => "Company already exist with this nip: {$request->nip}.",
-                ],
-            ], 400);
-        }
-
         // validate required fields
-        $requiredFields = ['name', 'nip', 'address', 'city', 'post_code'];
-        foreach ($requiredFields as $field) {
+        foreach (self::FILEDS as $field) {
             if (empty($request->$field)) {
                 return response()->json([
                     'error' => [
@@ -39,6 +32,15 @@ class CompanyController extends Controller
                     ],
                 ], 400);
             }
+        }
+
+        // validate exist of company by nip
+        if (Company::checkExistByNip($request->nip)) {
+            return response()->json([
+                'error' => [
+                    'message' => "Company already exist with this nip: {$request->nip}.",
+                ],
+            ], 400);
         }
 
         // create new
@@ -77,9 +79,9 @@ class CompanyController extends Controller
     /**
      * Show specific company by id
      * 
-     * @param int|null $id
+     * @param int $id
      */
-    public function showSpecific(?int $id)
+    public function showSpecific(int $id)
     {
         if (empty($id)) {
             return response()->json([
@@ -97,7 +99,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'error' => [
-                'message' => 'Compnay with entered id not exists.',
+                'message' => "Compnay with id {$id} not exists.",
             ],
         ], 400);
     }
@@ -105,9 +107,9 @@ class CompanyController extends Controller
     /**
      * Delete company
      * 
-     * @param int|null $id
+     * @param int $id
      */
-    public function delete(?int $id)
+    public function delete(int $id)
     {
         if (empty($id)) {
             return response()->json([
@@ -138,14 +140,13 @@ class CompanyController extends Controller
     /**
      * Update company
      * 
-     * @param int|null $id
+     * @param int $id
      */
-    public function update(?int $id, Request $request)
+    public function update(int $id, Request $request)
     {
         // validate required fields
-        $requiredFields = ['name', 'address', 'city', 'post_code'];
-        foreach ($requiredFields as $field) {
-            if (empty($request->$field)) {
+        foreach (self::FILEDS as $field) {
+            if (empty($request->$field) && $field != 'nip') {
                 return response()->json([
                     'error' => [
                         'message' => 'All required fields must be filled: name, address, city, and post_code.',
@@ -154,8 +155,18 @@ class CompanyController extends Controller
             }
         }
 
-        // create new
+        // update
         $company = Company::find($id);
+
+        // check exist of comapny
+        if (empty($company)) {
+            return response()->json([
+                'error' => [
+                    'message' => "Company dont exist with id {$id}",
+                ],
+            ], 400);
+        }
+
         $company->name = $request->name;
         $company->address = $request->address;
         $company->city = $request->city;
@@ -176,5 +187,34 @@ class CompanyController extends Controller
                 'message' => 'An error occurred while updateing the company. Please try again later.',
             ],
         ], 500);
+    }
+
+    /**
+     * Show list of company employees
+     * 
+     * @param int $id
+     */
+    public function employees(int $id)
+    {
+        $company = Company::find($id);
+        if (empty($company)) {
+            return response()->json([
+                'error' => [
+                    'message' => "Company dont exist with id {$id}",
+                ],
+            ], 400);
+        }
+        
+        // list of employees
+        $employees = $company->getEmployees();
+        if (count($employees) > 0) {
+            return $employees;
+        }
+
+        return response()->json([
+            'error' => [
+                'message' => "There is no employee in the company with id {$id}",
+            ],
+        ], 400);
     }
 }

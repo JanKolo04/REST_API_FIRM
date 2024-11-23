@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
-            $table->increments('id_company');
+        Schema::create('employees', function (Blueprint $table) {
+            $table->increments('id_employee');
             $table->string('name');
-            $table->string('nip');
-            $table->string('address');
-            $table->string('city');
-            $table->string('post_code');
+            $table->string('surname');
+            $table->string('email');
+            $table->string('phone')->nullable(true);
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::drop('companies');
+        Schema::drop('employees');
     }
 };
