@@ -18,7 +18,7 @@ class CompanyController extends Controller
         if (Company::checkExistByNip($request->nip)) {
             return response()->json([
                 'error' => [
-                    'message' => 'Company already exist with this nip: {$request->nip}.',
+                    'message' => "Company already exist with this nip: {$request->nip}.",
                 ],
             ], 400);
         }
@@ -32,6 +32,12 @@ class CompanyController extends Controller
                         'message' => 'All required fields must be filled: name, NIP, address, city, and post_code.',
                     ],
                 ], 400);
+            } elseif ($field == 'nip' && !Company::validateNip($request->nip)) {
+                return response()->json([
+                    'error' => [
+                        'message' => 'You enter wrong value into nip field.',
+                    ],
+                ], 400);
             }
         }
 
@@ -43,7 +49,7 @@ class CompanyController extends Controller
         $company->city = $request->city;
         $company->post_code = $request->post_code;
         
-        if (!$company->save()) {
+        if ($company->save()) {
             return response()->json([
                 'success' => [
                     'message' => 'Company created successfully.',
@@ -63,7 +69,7 @@ class CompanyController extends Controller
     /**
      * Show list of companies
      */
-    public function list(): Company
+    public function list()
     {
         return Company::all();
     }
@@ -149,13 +155,13 @@ class CompanyController extends Controller
         }
 
         // create new
-        $company = new Company();
+        $company = Company::find($id);
         $company->name = $request->name;
         $company->address = $request->address;
         $company->city = $request->city;
         $company->post_code = $request->post_code;
         
-        if (!$company->update()) {
+        if ($company->update()) {
             return response()->json([
                 'success' => [
                     'message' => 'Company updated successfully.',

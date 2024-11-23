@@ -22,7 +22,7 @@ Route::middleware([ApiAuthentication::class])->group(function() {
     // company
     Route::post('/company/create', [CompanyController::class, 'create']);
     Route::get('/company/list', [CompanyController::class, 'list']);
-    Route::get('/company/list/{$id}', [CompanyController::class, 'showSpecific']);
-    Route::delete('/company/delete/{$id}', [CompanyController::class, 'delete']);
-    Route::patch('/company/update/{$id}', [CompanyController::class, 'update']);
+    Route::get('/company/list/{id}', [CompanyController::class, 'showSpecific']);
+    Route::delete('/company/delete/{id}', [CompanyController::class, 'delete']);
+    Route::patch('/company/update/{id}', [CompanyController::class, 'update']);
 });

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('nip');
             $table->string('address');
-            $table->date('city');
+            $table->string('city');
             $table->string('post_code');
             $table->timestamps();
         });

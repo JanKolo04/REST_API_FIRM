@@ -1,35 +1,36 @@
 version: '2'
 
 services:
-  mariadb:
-    image: docker.io/bitnami/mariadb:11.1
+  mysql:
+    image: mysql:8.0
     environment:
-      - MARIADB_ROOT_PASSWORD=passwordatabase
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_USER=bn_myapp
-      - MARIADB_DATABASE=bitnami_myapp
+      - MYSQL_ROOT_PASSWORD=passwordatabase
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_USER=root
+      - MYSQL_DATABASE=bitnami_myapp
+    ports:
+      - 3306:3306
     networks:
       - mynetwork1
+
   myapp:
     build: 
-      
       context: .
       dockerfile: Dockerfile
     image: docker.io/bitnami/laravel:10
     ports:
       - '8000:8000'
       - '5173:5173'
-    
     environment:
-      - DB_HOST=mariadb
+      - DB_HOST=mysql
       - DB_PORT=3306
-      - DB_USERNAME=bn_myapp
+      - DB_USERNAME=root
       - DB_DATABASE=bitnami_myapp
+      - DB_PASSWORD=passwordatabase
     volumes:
       - './my-app:/app'
     depends_on:
-      - mariadb
-  
+      - mysql
     networks:
       - mynetwork1
 
@@ -39,13 +40,13 @@ services:
       - 8083:80
     restart: always
     environment:
-      - PMA_HOST=mariadb
+      - PMA_HOST=mysql
       - PMA_USER=root
       - PMA_PASSWORD=passwordatabase
     depends_on:
-      - mariadb
+      - mysql
     networks:
       - mynetwork1
 
 networks:
-  mynetwork1:  
+  mynetwork1:

@@ -44,4 +44,20 @@ class Company extends Model
 
         return false;
     }
+
+    /**
+     * Validate length of nip filed
+     * 
+     * @param string|null $nip
+     */
+    public static function validateNip(?string $nip): bool
+    {
+        $length = 10;
+
+        if (strlen($nip) != 10 || !ctype_digit($nip)) {
+            return false;
+        }
+
+        return true;
+    }
 }
