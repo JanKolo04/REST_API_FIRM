@@ -146,7 +146,7 @@ class CompanyController extends Controller
     {
         // validate required fields
         foreach (self::FILEDS as $field) {
-            if (empty($request->$field) && $field != 'nip') {
+            if (empty($request->$field)) {
                 return response()->json([
                     'error' => [
                         'message' => 'All required fields must be filled: name, address, city, and post_code.',
@@ -165,6 +165,8 @@ class CompanyController extends Controller
                     'message' => "Company dont exist with id {$id}",
                 ],
             ], 400);
+        } elseif ($company->getCompanyByNip($request->nip)) {
+            
         }
 
         $company->name = $request->name;

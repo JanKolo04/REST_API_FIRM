@@ -45,6 +45,23 @@ class Company extends Model
     }
 
     /**
+     * Check company id by nip
+     * 
+     * @param string $nip
+     */
+    public function getCompanyByNip(string $nip): bool
+    {
+        $employee = static::where('nip', $nip)->first();
+        if (!empty($employee) && 
+            $employee->id_company != $this->id_company
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Validate length of nip filed
      * 
      * @param string $nip
