@@ -6,7 +6,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=passwordatabase
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-      - MYSQL_USER=root
       - MYSQL_DATABASE=bitnami_myapp
     ports:
       - 3306:3306
@@ -14,9 +13,6 @@ services:
       - mynetwork1
 
   myapp:
-    build: 
-      context: .
-      dockerfile: Dockerfile
     image: docker.io/bitnami/laravel:10
     ports:
       - '8000:8000'
