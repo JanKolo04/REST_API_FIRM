@@ -1,10 +1,10 @@
 ## Description
 REST API in which you can create companies and employees.
-## Tehnologies
+
+## Technologies
 - Laravel 10
 - MySql 8
 - Phpmyadmin
-
 
 ## Deployment
 
