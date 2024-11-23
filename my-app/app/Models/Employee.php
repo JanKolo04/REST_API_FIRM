@@ -61,7 +61,7 @@ class Employee extends Model
     /**
      * Validate phone number
      * 
-     * @param string $phone
+     * @param string|null $phone
      */
     public static function validatePhone(?string $phone): bool
     {        

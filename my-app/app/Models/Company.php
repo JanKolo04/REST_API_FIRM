@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Employee;
+use App\Models\CompanyEmployee;
 
 class Company extends Model
 {
@@ -82,7 +83,14 @@ class Company extends Model
      */
     public function getEmployees()
     {
-        return static::where('id_company', $this->id_company)
+        $employees = [];
+        $companyEmployees = CompanyEmployee::where('id_company', $this->id_company)
             ->get();
+        
+        foreach ($companyEmployees as $companyEmployee) {
+            $employees[] = Employee::find($companyEmployee->id_employee);
+        }
+
+        return $employees;
     }
 }

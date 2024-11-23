@@ -8,7 +8,7 @@ use App\Models\Employee;
 
 class EmployeeController extends Controller
 {
-    const FILEDS = ['name', 'surname', 'email', 'phone'];
+    const FIELDS = ['name', 'surname', 'email', 'phone'];
 
     /**
      * Create employee
@@ -18,7 +18,7 @@ class EmployeeController extends Controller
     public function create(Request $request)
     {
         // validate required fields
-        foreach (self::FILEDS as $field) {
+        foreach (self::FIELDS as $field) {
             if (empty($request->$field) && $field != 'phone') {
                 return response()->json([
                     'error' => [
@@ -38,7 +38,7 @@ class EmployeeController extends Controller
         if (Employee::checkExistByEmail($request->email)) {
             return response()->json([
                 'error' => [
-                    'message' => "Company already exist with this email: {$request->email}.",
+                    'message' => "Employee already exist with this email: {$request->email}.",
                 ],
             ], 400);
         }
@@ -54,12 +54,12 @@ class EmployeeController extends Controller
             return response()->json([
                 'success' => [
                     'message' => 'Employee created successfully.',
-                    'company' => $employee,
+                    'employee' => $employee,
                 ],
             ], 201);
         }
 
-        // when something is wrong with saving company throw error
+        // when something is wrong with saving employee throw error
         return response()->json([
             'error' => [
                 'message' => 'An error occurred while creating the employee. Please try again later.',
@@ -87,11 +87,11 @@ class EmployeeController extends Controller
     /**
      * Show specific employee by id
      * 
-     * @param int $id
+     * @param int $id_employee
      */
-    public function showSpecific(int $id)
+    public function showSpecific(int $id_employee)
     {
-        if (empty($id)) {
+        if (empty($id_employee)) {
             return response()->json([
                 'error' => [
                     'message' => 'Id is a required param.',
@@ -100,14 +100,14 @@ class EmployeeController extends Controller
         }
 
         // try to find employee
-        $employee = Employee::find($id);
+        $employee = Employee::find($id_employee);
         if (!empty($employee)) {
             return $employee;
         }
 
         return response()->json([
             'error' => [
-                'message' => "Employee with id {$id} not exists.",
+                'message' => "Employee with id {$id_employee} not exists.",
             ],
         ], 400);
     }
@@ -115,11 +115,11 @@ class EmployeeController extends Controller
     /**
      * Delete employee
      * 
-     * @param int $id
+     * @param int $id_employee
      */
-    public function delete(int $id)
+    public function delete(int $id_employee)
     {
-        if (empty($id)) {
+        if (empty($id_employee)) {
             return response()->json([
                 'error' => [
                     'message' => 'Id is a required param.',
@@ -127,7 +127,7 @@ class EmployeeController extends Controller
             ], 500);
         }
 
-        $employee = Employee::find($id);
+        $employee = Employee::find($id_employee);
         if (!empty($employee) && $employee->delete()) {
             return response()->json([
                 'success' => [
@@ -148,12 +148,13 @@ class EmployeeController extends Controller
     /**
      * Update employee
      * 
-     * @param int $id
+     * @param int $id_employee
+     * @param Request $request
      */
-    public function update(int $id, Request $request)
+    public function update(int $id_employee, Request $request)
     {
         // validate required fields
-        foreach (self::FILEDS as $field) {
+        foreach (self::FIELDS as $field) {
             if (empty($request->$field) && $field != 'phone') {
                 return response()->json([
                     'error' => [
@@ -164,13 +165,13 @@ class EmployeeController extends Controller
         }
 
         // update
-        $employee = Employee::find($id);
+        $employee = Employee::find($id_employee);
 
         // check exist of employee
         if (empty($employee)) {
             return response()->json([
                 'error' => [
-                    'message' => "Employee dont exist with id {$id}",
+                    'message' => "Employee dont exist with id {$id_employee}",
                 ],
             ], 400);
         } elseif ($employee->getEmployeeByEmail($request->email)) {
@@ -195,10 +196,10 @@ class EmployeeController extends Controller
             ], 201);
         }
 
-        // when something is wrong with saving company throw error
+        // when something is wrong with updateing employee throw error
         return response()->json([
             'error' => [
-                'message' => 'An error occurred while updateing the company. Please try again later.',
+                'message' => 'An error occurred while updateing the employee. Please try again later.',
             ],
         ], 500);
     }
