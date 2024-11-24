@@ -18,12 +18,14 @@ Install composer in `my-app` directory.
 To install all images in docker run this command in project directory.
 
 ```bash
+  cd ..
   docker compose up -d
 ```
 
 Migrate tables into database. Run this command in `my-app` directory.
 
 ```bash
+  cd my-app
   php artisan migrate
 ```
 
