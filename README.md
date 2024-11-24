@@ -15,7 +15,7 @@ Install composer in `my-app` directory.
   composer install
 ```
 
-To install all images in docker run this command in project directory.
+To install all images in docker run this command in main project directory.
 
 ```bash
   cd ..
